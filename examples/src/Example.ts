@@ -56,7 +56,8 @@ export class Example {
 
   public params: Params = {};
 
-  private _hoverObject: THREE.Mesh | null = null;
+  private _selectedObject: THREE.Mesh | null = null;
+  private _hoveredObject: THREE.Mesh | null = null;
   private _hoverLine: Line2 | null = null;
 
   constructor() {
@@ -110,8 +111,12 @@ export class Example {
       this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
+    const resetSelection = () => {
+      this._selectedObject = null;
+    };
+
     const resetHover = () => {
-      this._hoverObject = null;
+      this._hoveredObject = null;
       if (this._hoverLine) {
         this.scene.remove(this._hoverLine);
         this._hoverLine.geometry.dispose();
@@ -120,10 +125,10 @@ export class Example {
     };
 
     const onHover = (object: THREE.Mesh) => {
-      if (this._hoverObject === object) return;
+      if (this._hoveredObject === object) return;
       if (object.isMesh == null) return;
 
-      this._hoverObject = object;
+      this._hoveredObject = object;
       if (this._hoverLine) this.scene.remove(this._hoverLine);
 
       // Get vertices of the object
@@ -157,6 +162,10 @@ export class Example {
     const onPointerMove = (event: PointerEvent) => {
       updatePointer(event);
 
+      if (this._selectedObject) {
+        return;
+      }
+
       this.raycaster.setFromCamera(this.pointer, this.camera);
 
       const intersects = this.raycaster.intersectObjects(
@@ -176,6 +185,24 @@ export class Example {
     };
 
     this.renderer.domElement.addEventListener("pointermove", onPointerMove);
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (this._hoveredObject) {
+        this._selectedObject = this._hoveredObject;
+        // resetHover();
+      }
+    };
+
+    this.renderer.domElement.addEventListener("pointerdown", onPointerDown);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        resetSelection();
+        resetHover();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
 
     const animate = () => {
       requestAnimationFrame(animate);
