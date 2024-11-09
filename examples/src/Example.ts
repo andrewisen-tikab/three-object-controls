@@ -6,6 +6,8 @@ import "./styles.css";
 import { COLORS } from "./constants";
 CameraControls.install({ THREE });
 
+import { ObjectControls } from "../../src";
+
 THREE.ColorManagement.enabled = true;
 export type Params = {};
 
@@ -22,7 +24,7 @@ export class Example {
   public camera: THREE.PerspectiveCamera;
   public cameraControls: CameraControls;
   public renderer: THREE.WebGLRenderer;
-
+  public objectControls: ObjectControls;
   public params: Params = {};
 
   constructor() {
