@@ -1,1 +1,1 @@
-export const EXAMPLES = ["cube"];
+export const EXAMPLES = ["cube", "house"];

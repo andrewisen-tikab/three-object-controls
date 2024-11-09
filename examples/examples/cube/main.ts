@@ -1,11 +1,9 @@
 import * as THREE from "three";
 import { Example } from "../../src/Example";
 import { COLORS } from "../../src/constants";
+import { randomInt } from "../../src/utils";
 
 const example = new Example();
-
-const random = (min: number, max: number) => Math.random() * (max - min) + min;
-const randomInt = (min: number, max: number) => Math.floor(random(min, max));
 
 const x = 1;
 const y = 1;
