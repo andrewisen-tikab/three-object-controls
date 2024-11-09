@@ -4,13 +4,32 @@ import { COLORS } from "../../src/constants";
 
 const example = new Example();
 
+const random = (min: number, max: number) => Math.random() * (max - min) + min;
+const randomInt = (min: number, max: number) => Math.floor(random(min, max));
+
 const x = 1;
 const y = 1;
 const z = 1;
 
+const NO_CUBES = 3;
+const cubes: THREE.Mesh[] = [];
+
 const geometry = new THREE.BoxGeometry(x, y, z);
+geometry.computeBoundsTree();
+
 geometry.translate(0, y / 2, 0);
 const material = new THREE.MeshBasicMaterial({ color: COLORS.object });
 const cube = new THREE.Mesh(geometry, material);
 
-example.addObject(cube);
+for (let i = 0; i < NO_CUBES; i++) {
+  const clone = cube.clone();
+  const position = new THREE.Vector3(randomInt(-5, 5), 0, randomInt(-5, 5));
+  clone.position.copy(position);
+
+  cubes.push(clone);
+  example.group.add(clone);
+}
+
+cubes.forEach((cube) => {
+  console.log(cube.position.x);
+});

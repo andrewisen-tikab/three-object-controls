@@ -1332,6 +1332,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"three-mesh-bvh@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "three-mesh-bvh@npm:0.8.2"
+  peerDependencies:
+    three: ">= 0.159.0"
+  checksum: 10/bc1cb8aaba6e45d3f9b12162d51f7b714665c80f177011162716382eecac900a57114d24ff71717d224c200221161fd0dc05957bb603f669a79ce4cab1377f26
+  languageName: node
+  linkType: hard
+
 "three-object-controls@workspace:.":
   version: 0.0.0-use.local
   resolution: "three-object-controls@workspace:."
@@ -1339,6 +1348,7 @@ __metadata:
     "@types/three": "npm:^0.169.0"
     camera-controls: "npm:^2.9.0"
     three: "npm:^0.170.0"
+    three-mesh-bvh: "npm:^0.8.2"
     typescript: "npm:~5.6.2"
     vite: "npm:^5.4.10"
   languageName: unknown

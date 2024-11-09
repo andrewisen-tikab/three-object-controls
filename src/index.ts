@@ -1,2 +1,2 @@
-export * from "./core/EventDispatcher";
+export * from "./AbstractObjectControls";
 export * from "./ObjectControls";
