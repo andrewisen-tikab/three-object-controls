@@ -97,7 +97,7 @@ export class Example {
     this.scene.add(this.group);
 
     this.camera = new THREE.PerspectiveCamera(
-      75,
+      50,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
@@ -112,6 +112,7 @@ export class Example {
     this.scene.add(gridHelper);
 
     const axesHelper = new THREE.AxesHelper(10);
+    axesHelper.position.set(0, 0.01, 0);
     this.scene.add(axesHelper);
 
     const clock = new THREE.Clock();
