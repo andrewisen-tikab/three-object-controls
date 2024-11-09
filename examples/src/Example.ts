@@ -3,10 +3,17 @@ import * as THREE from "three";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import Stats from "three/addons/libs/stats.module.js";
 import "./styles.css";
+import { COLORS } from "./constants";
 CameraControls.install({ THREE });
 
+THREE.ColorManagement.enabled = true;
 export type Params = {};
 
+/**
+ * Example class that sets up a basic Three.js scene with camera controls,
+ * a grid helper, and an axes helper. It also includes a GUI for parameter
+ * adjustments and stats for performance monitoring.
+ */
 export class Example {
   public gui: GUI;
   public object: THREE.Object3D | null;
@@ -24,10 +31,8 @@ export class Example {
     const stats = new Stats();
     document.body.appendChild(stats.dom);
 
-    this.object = new THREE.Object3D();
-
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xaaaaaa);
+    this.scene.background = new THREE.Color(COLORS.background);
     this.group = new THREE.Group();
     this.scene.add(this.group);
 
@@ -40,6 +45,7 @@ export class Example {
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     document.body.appendChild(this.renderer.domElement);
 
     const gridHelper = new THREE.GridHelper(10, 10);
@@ -72,5 +78,17 @@ export class Example {
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
     });
+  }
+
+  /**
+   * Adds a new object to the group. If an object already exists, it will be removed before adding the new one.
+   *
+   * @param object - The THREE.Object3D instance to be added to the group.
+   */
+  public addObject(object: THREE.Object3D): void {
+    if (this.object) this.group.remove(this.object);
+
+    this.object = object;
+    this.group.add(object);
   }
 }
