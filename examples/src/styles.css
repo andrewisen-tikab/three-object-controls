@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+}
+
+#info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  z-index: 1000;
+}
