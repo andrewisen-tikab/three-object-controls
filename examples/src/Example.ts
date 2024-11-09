@@ -31,10 +31,35 @@ THREE.BatchedMesh.prototype.computeBoundsTree = computeBatchedBoundsTree;
 THREE.BatchedMesh.prototype.disposeBoundsTree = disposeBatchedBoundsTree;
 THREE.BatchedMesh.prototype.raycast = acceleratedRaycast;
 
+const WORLD_POSITION = /* @__PURE__ */ new THREE.Vector3();
+
+/**
+ * Target.
+ *
+ * I.e. current orbit point of the camera controls.
+ */
+const A = /* @__PURE__ */ new THREE.Vector3();
+/**
+ * Camera's position
+ */
+const B = /* @__PURE__ */ new THREE.Vector3();
+/**
+ * Point from camera to target (or vice versa).
+ */
+const AB = /* @__PURE__ */ new THREE.Vector3();
+/**
+ * New position of camera.
+ */
+const C = /* @__PURE__ */ new THREE.Vector3();
+
 const lineMaterial = new LineMaterial({
   color: 0xffffff,
-  linewidth: 4, // Adjust for line thickness (normalized to screen size)
+  linewidth: 2, // Adjust for line thickness (normalized to screen size)
   resolution: new THREE.Vector2(window.innerWidth, window.innerHeight), // Required for LineMaterial
+  dashed: true,
+  dashScale: 20,
+  depthTest: false,
+  depthWrite: false,
 });
 
 /**
@@ -124,6 +149,27 @@ export class Example {
       }
     };
 
+    const onSelect = (object: THREE.Mesh) => {
+      this._selectedObject = object;
+      object.getWorldPosition(WORLD_POSITION);
+
+      // Get the current state
+      this.cameraControls.getTarget(A);
+      this.cameraControls.getPosition(B);
+
+      AB.subVectors(B, A);
+      C.addVectors(WORLD_POSITION, AB);
+      this.cameraControls.setLookAt(
+        C.x,
+        C.y,
+        C.z,
+        WORLD_POSITION.x,
+        WORLD_POSITION.y,
+        WORLD_POSITION.z,
+        true
+      );
+    };
+
     const onHover = (object: THREE.Mesh) => {
       if (this._hoveredObject === object) return;
       if (object.isMesh == null) return;
@@ -144,7 +190,8 @@ export class Example {
       const geometry = new ConvexGeometry(points);
 
       const edges = new THREE.EdgesGeometry(geometry);
-      edges.scale(1.01, 1.01, 1.01);
+      const s = 0.98; // 1.01;
+      edges.scale(s, s, s);
       edges.translate(object.position.x, object.position.y, object.position.z);
 
       const lineSegmentsGeometry = new LineSegmentsGeometry();
@@ -155,6 +202,7 @@ export class Example {
         lineSegmentsGeometry,
         lineMaterial
       );
+      this._hoverLine.renderOrder = 1;
       this._hoverLine.computeLineDistances();
       this.scene.add(this._hoverLine);
     };
@@ -188,8 +236,7 @@ export class Example {
 
     const onPointerDown = (event: PointerEvent) => {
       if (this._hoveredObject) {
-        this._selectedObject = this._hoveredObject;
-        // resetHover();
+        onSelect(this._hoveredObject);
       }
     };
 
